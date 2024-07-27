@@ -1,0 +1,13 @@
+
+# File(s) needed to run LAMMPS simulation:
+
+1. in.mono: LAMMPS input script which also taked "poly.data" datafile as input; note that the name of this file gets changed to "in.run" in order to generalize submission scripts
+   do not need to change the name of it
+
+
+# Files needed to submit runs:
+
+1. submit_mono.sh: bash script which automates the filling out of parameters in the simulation input files and submitting runs, for bash shell
+
+2. submit.quest: submission script which is used to start job(s) running on Quest compute nodes
+   submit.mino: submission script which is used to start job(s) running on Minotaur compute nodes 

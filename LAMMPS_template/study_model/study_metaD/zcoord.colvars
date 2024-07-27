@@ -1,0 +1,41 @@
+colvarsTrajFrequency		100 # write to the output file every this time
+colvarsRestartFrequency		1000000 # write to the restart file every this time  
+
+# define CVs
+colvar {
+
+	name distz # projection of a distance in the z direction
+	width 0.10 #  
+
+	lowerBoundary {LOWERBOUND} # size of the simulation box? 
+	upperBoundary {UPPERBOUND} # size of the simulation box?
+	expandBoundaries on # for metaD
+
+	outputAppliedForce on # total force is written in the output file
+	outputVelocity off
+	corrFunc on # a time correlaction function should be written
+	
+	# define distanceZ	
+	distanceZ {
+
+		main { atomNumbersRange 1-{N} } # group of atoms whose position should be measured, chain length
+		ref { dummyAtom (0.0, 0.0, 0.0) } # partical at a fixed position in space
+		axis (0.0, 0.0, 1.0) 
+
+	}
+
+}
+
+# define metaD
+metadynamics {
+
+	name metad # name
+	colvars distz # CVs 
+	hillWeight 0.0005 # height of the Gaussian hills
+	newHillFrequency 100 # the steps after a new Gaussian hill is added
+	# output
+	writeFreeEnergyFile on # PMF is written
+	keepFreeEnergyFiles on # step number is included 
+	writeHillsTrajectory on # write Gaussian hills into the file
+
+}

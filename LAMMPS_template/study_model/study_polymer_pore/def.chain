@@ -1,0 +1,31 @@
+Polymer chain definition
+
+{PHI}           rhostar
+{LENGTH}        xlength
+{LENGTH}        ylength 
+{HEIGHT}        zlength 
+{RAND}          random # seed (8 digits or less)
+{NSETS}         # of sets of chains (blank line + 6 values for each set)
+0               molecule tag rule: 0 = by mol, 1 = from 1 end, 2 = from 2 ends
+
+{FRACA}         mol fraction of species (0 through 1, inclusive) 
+{NA}            monomers/chain
+1               type of monomers (for output into LAMMPS file)
+1               type of bonds (for output into LAMMPS file)
+0.97            distance between monomers (in reduced units)
+1.02            no distance less than this from site i-1 to i+1 (reduced unit)
+
+{FRACB}         mol fraction of species (0 through 1, inclusive) 
+{NB}            monomers/chain
+2               type of monomers (for output into LAMMPS file)
+1               type of bonds (for output into LAMMPS file)
+0.97            distance between monomers (in reduced units)
+1.02            no distance less than this from site i-1 to i+1 (reduced unit)
+
+{FRACC}         mol fraction of species (0 through 1, inclusive) 
+{NC}            monomers/chain
+3               type of monomers (for output into LAMMPS file)
+1               type of bonds (for output into LAMMPS file)
+0.97            distance between monomers (in reduced units)
+1.02            no distance less than this from site i-1 to i+1 (reduced unit)
+

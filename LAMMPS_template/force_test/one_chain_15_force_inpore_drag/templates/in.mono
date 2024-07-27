@@ -1,0 +1,66 @@
+# single polymer chain into pore with metaD
+# Input script parameters adapted from "lammps.sandia.gov/bench.html#chain"
+
+clear
+units		lj
+processors      * * *
+dimension	3
+boundary 	p p p 
+atom_style 	bond
+
+region		box block -12.5 12.5 -12.5 12.5 -26 25 units box
+create_box      1 box bond/types 1 extra/bond/per/atom 1
+
+region		tube cylinder z 0.0 0.0 {R} -25 -{R} side in units box open 2
+
+read_data	poly.data add append shift 0 0 -20
+mass		* 1.0
+
+group		poly type 1 
+group           one id 1
+
+neighbor 	4.0  bin
+neigh_modify	every 1 delay 1
+comm_modify  	cutoff 1.9
+
+pair_style      lj/cut 2.5
+pair_coeff      1 1 1.0 1.0 1.122462
+pair_modify     shift yes
+
+bond_style		fene
+bond_coeff		1 30.0 1.5 1.0 1.0
+special_bonds           fene
+
+
+fix 		1 all nve
+fix 		2 all langevin 1.0 1.0 100.0 {RAND1} 
+fix             3 poly wall/lj93 zhi EDGE 1.0 1.0 0.858374 units box pbc yes
+fix             4 poly wall/funnel zlo 0.0 {EPS} 1.00 2.5 0.0 0.0 {D} {R} -{R} units box pbc yes
+fix             5 poly wall/region tube lj93 {EPS} 1.00 2.5
+fix_modify      3 energy yes
+fix_modify      4 energy yes
+fix_modify      5 energy yes
+
+thermo				10000
+thermo_style 			custom step temp press ke pe epair ebond etotal fmax fnorm
+thermo_modify			flush yes
+
+timestep	0.001
+run 		1000000
+
+#set             group all image 0 0 0
+compute		1 poly reduce sum fx
+compute         2 poly reduce sum fy
+compute         3 poly reduce sum fz
+compute 	4 poly com
+compute         5 all pe fix 
+
+fix 	drg one addforce 0 0 1
+
+fix	at1 all ave/time 1 1 1 c_4[3] c_1 c_2 c_3 file comz_forcez_EPS{EPS}.txt
+fix     at2 all ave/time 1 1 1 c_4[3] c_5 file comz_potential_EPS{EPS}.txt
+
+dump			2 poly custom 1 poly.lammpstrj id type x y z ix iy iz fx fy fz
+dump_modify		2 sort id pbc yes 
+
+run		100

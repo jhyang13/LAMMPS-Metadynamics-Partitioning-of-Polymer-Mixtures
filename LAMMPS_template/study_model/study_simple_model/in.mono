@@ -1,0 +1,93 @@
+# Polymer solution and surface with pore
+# Input script parameters adapted from "lammps.sandia.gov/bench.html#chain"
+
+
+clear #starting over, with default values
+
+
+units			lj #unit of all quantities; style:  unitless
+processors 		3 3 1 #according to x,y,z fractorization, cut the whole box into 9 small blocks, processors/nodes
+dimension		3 #dimensionality: in 3d 
+boundary 		p p p #periodic in each dimension
+atom_style 		bond #bead-spring polymers, guassian chain
+
+
+restart			1000000 restart1.dat restart2.dat #N: write a restart file every N timesteps; root: filename to which timestep # is appended, 2 files toogle with each other 
+
+
+#build box, create_box after the region
+region			box block -{HBOX} {HBOX} -{HBOX} {HBOX} -{ZLO} {ZHI} units box #define the geometric region of space; ID; style; units  
+create_box      	1 box bond/types 1 extra/bond/per/atom 1 #create the simulation box; N: number of atom types; ID; keywors: bond types
+region			tube cylinder z 0.0 0.0 {R} -{D} -{R} side in units box open 2 #ID; style; axis; coords of other 2 dimensions; radius; bounds of other two axis; inside; open high cap 
+
+read_data		poly.data add append #read datas for simulation to run; filename; add append: add new atoms IDs appended to current IDs
+
+
+mass			* 1.0 #atom types: for all types with the same mass; the value of mass
+group			poly type 1 #a collection of atoms as belonging to a group; ID; type 1: all the atoms are in the same one type
+
+
+#build pairwise neighbor list
+neighbor 		0.4 bin #skin: extra distance beyond force cutoff; style: bin way of bining datas in pairwise neighbor lsits
+neigh_modify	        every 1 delay 1 #every: build neighbor list every 1 steps; delay: delay building neighbor list until 1 step since last build
+comm_modify  	        cutoff 3.0 #the ghost cutoff distance: pairwise force cutoff + neighbor skin + ghost cutoff, communicate atoms in other processors
+
+
+#build potential
+pair_style 		soft 1.122462 # style: pair potential,between all atoms, soft potential; rc
+pair_coeff		1 1 4 #atom type; coefficients for the corresponding formulation
+bond_style		harmonic #bonds are defined between a specific pair, only two atoms a time; style: bond potential
+bond_coeff		1 100.0 1.00 #bons type; coefficients for the corresponding formulation
+special_bonds           fene #set the 3 coefficients to LJ and coulombic interactions
+variable 	        prefactor equal ramp(4,100) #special for soft potential
+
+
+#equilibrium the system in the box
+fix 				1 all nve #ID; group ID; style: constant NVE time integration,constant E, T, P
+fix 				2 all langevin 1.0 1.0 10.0 {RAND1} #interaction force; Temstart; Temstop; damping parameter, how rapidly the temperature is relaxed
+fix				3 all adapt 1 pair soft a 1 1 v_prefactor #special for soft potential
+fix     			4 poly wall/lj93 zhi EDGE 1.0 1.0 0.858374 units box pbc yes #interactions between atoms and wall
+fix 				5 poly wall/lj93 zlo 0.0 1.0 1.0 0.858374 units box pbc yes #interactions between atoms and wall
+
+
+#output thermodynamic info
+thermo				1000 #print thermodynamic info every N timesteps
+thermo_style 	                custom step temp press ke pe epair ebond etotal fmax fnorm #style; content
+thermo_modify	                flush yes #keep output updated
+
+
+#dump a snapshot of atom quantities
+dump				1 poly custom 1000 poly.lammpstrj.gz id mol type x y z ix iy iz #ID; group ID; style; N timesteps; filename; atom ID; molecule ID; atom type; unscaled atoms; atoms inside of box
+dump_modify		        1 sort id pbc yes #ID; sort the output by atom ID; remapped to the periodic box
+
+
+#time and steps
+timestep			0.01 #(time units)
+run 				4000 #number of time steps
+
+#delete fix
+unfix                           2
+unfix 				3
+
+#build potential
+pair_style 		        lj/cut 2.5
+pair_coeff 		        1 1 1.0 1.0 1.122462
+pair_modify		        shift yes #whether a lj potential is shifted at its cutoff to 0.0
+
+fix 			        6 all langevin 1.0 4.0 10.0 {RAND2}
+
+run		    		500000
+
+unfix 				6
+fix 			        7 all langevin 4.0 1.0 10.0 {RAND3}
+
+run 				500000
+
+unfix 				5
+unfix				7
+
+fix			 	8 all langevin 1.0 1.0 10.0 {RAND4}
+fix      			9 poly wall/funnel zlo 0.0 {EPS} 1.0 0.858374 0.0 0.0 {RADHI} {R} -{LO} units box pbc yes
+fix 				10 poly wall/region tube lj93 {EPS} 1.0 0.858374 #treat the surface of the geometric region as a bound wall with nearby particles
+
+run				{RUN}

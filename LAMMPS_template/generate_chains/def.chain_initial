@@ -1,0 +1,35 @@
+Polymer chain definition
+
+{PHI}           rhostar !total number of monomers / box's volume
+
+{LENGTH}        xlength !xyz of 'the box' that is used in in.mono, size can be 50 here or any other integers
+{LENGTH}        ylength !
+{HEIGHT}        zlength !
+
+{RAND}          random # seed (8 digits or less) 
+{NSETS}         # of sets of chains (blank line + 6 values for each set) !the nubmer of the sections that is used down below
+0               molecule tag rule: 0 = by mol, 1 = from 1 end, 2 = from 2 ends
+
+
+!each of the sectons down below stands for one specific type of the chain. Ex. One type of long chain and one type of short chain use two sections
+{FRACA}         mol fraction of species (0 through 1, inclusive) !number of long chains / number of total chains
+{NA}            monomers/chain !number of monomers per chain
+1               type of monomers (for output into LAMMPS file)
+1               type of bonds (for output into LAMMPS file)
+0.97            distance between monomers (in reduced units)
+1.02            no distance less than this from site i-1 to i+1 (reduced unit)
+
+{FRACB}         mol fraction of species (0 through 1, inclusive) 
+{NB}            monomers/chain
+2               type of monomers (for output into LAMMPS file)
+1               type of bonds (for output into LAMMPS file)
+0.97            distance between monomers (in reduced units)
+1.02            no distance less than this from site i-1 to i+1 (reduced unit)
+
+{FRACC}         mol fraction of species (0 through 1, inclusive) 
+{NC}            monomers/chain
+3               type of monomers (for output into LAMMPS file)
+1               type of bonds (for output into LAMMPS file)
+0.97            distance between monomers (in reduced units)
+1.02            no distance less than this from site i-1 to i+1 (reduced unit)
+

@@ -1,0 +1,65 @@
+# single polymer chain into pore with metaD
+# Input script parameters adapted from "lammps.sandia.gov/bench.html#chain"
+
+clear
+units		lj
+processors      * * *
+dimension	3
+boundary 	p p p 
+atom_style 	bond  
+
+region		box block -12.5 12.5 -12.5 12.5 0 25 units box
+create_box      1 box bond/types 1 extra/bond/per/atom 1
+
+read_data	poly.data add append 
+mass		* 1.0
+
+group		poly type 1 
+
+neighbor 	4.0  bin
+neigh_modify	every 1 delay 1
+comm_modify  	cutoff 1.9
+
+pair_style 	soft 1.122462
+pair_coeff	1 1 4
+
+bond_style		fene
+bond_coeff		1 30.0 1.5 1.0 1.0
+special_bonds           fene
+
+variable 	prefactor equal ramp(4,100)
+
+fix 		1 all nve
+fix 		2 all langevin 1.0 1.0 10.0 {RAND1}
+fix		3 all adapt 1 pair soft a 1 1 v_prefactor
+
+thermo				1000
+thermo_style 			custom step temp press ke pe epair ebond etotal fmax fnorm
+thermo_modify			flush yes
+
+timestep	0.01
+run 		100000
+
+unfix           2
+unfix 		3
+
+pair_style 	lj/cut 2.5
+pair_coeff 	1 1 1.0 1.0 1.122462
+pair_modify	shift yes
+
+fix		4 all langevin 1.0 1.0 10.0 {RAND2}
+
+thermo				1000
+thermo_style 			custom step temp press ke pe epair ebond etotal fmax fnorm
+thermo_modify			flush yes
+
+run		1000000
+
+compute 	1 poly gyration
+
+fix	fp all print 10000 "$(step) $(c_1)" title "#timestep rg" file rg.txt screen no
+
+#dump			2 poly custom 100000 poly.lammpstrj.gz id type x y z ix iy iz fx fy fz
+#dump_modify		2 sort id pbc yes 
+
+run		10000000

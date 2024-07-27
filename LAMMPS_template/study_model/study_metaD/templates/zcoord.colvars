@@ -1,0 +1,37 @@
+colvarsTrajFrequency		100
+colvarsRestartFrequency		100000
+
+colvar {
+
+	name distz
+	width 0.10
+
+	lowerBoundary -50.0 
+	upperBoundary 50.0
+	expandBoundaries on
+
+	outputAppliedForce on
+	outputVelocity off
+	corrFunc on
+		
+	distanceZ {
+
+		main { atomNumbersRange 1-{N} }
+		ref { dummyAtom (0.0, 0.0, 0.0) } 
+		axis (0.0, 0.0, 1.0) 
+
+	}
+
+}
+
+metadynamics {
+
+	name metad 
+	colvars distz
+	hillWeight 0.0005
+	newHillFrequency 100
+	writeFreeEnergyFile on
+	keepFreeEnergyFiles on
+	writeHillsTrajectory on
+
+}

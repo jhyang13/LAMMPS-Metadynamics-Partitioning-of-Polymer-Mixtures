@@ -1,0 +1,22 @@
+#!/bin/bash
+#SBATCH -A p31129
+#SBATCH -p normal
+#SBATCH -t 48:00:00
+#SBATCH -N 1
+#SBATCH --mem=8G
+#SBATCH --ntasks-per-node={NP}
+#SBATCH --mail-user=jobs.csml@gmail.com
+#SBATCH --mail-type=END
+#SBATCH --output=log.lammps
+#SBATCH --error=logif.err
+#SBATCH --job-name="{DIR}"
+
+module purge
+module load mpi/openmpi-4.0.5-intel-19.0.5.281
+
+cd /projects/p31129/polymers/{DIR}/
+time mpirun -np {NP} /projects/p31129/LAMMPS/lammps-29Oct20/src/lmp_quest -in in.run
+
+if [ $? -eq 0 ] ; then 
+touch COMPLETED
+fi

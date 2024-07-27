@@ -1,0 +1,50 @@
+# Polymer melt and surface with pore
+# Input script parameters adapted from "lammps.sandia.gov/bench.html#chain"
+
+clear
+
+units						lj
+dimension				3
+boundary 				p p p 
+atom_style 			bond
+
+region					box block -{HBOX} {HBOX} -{HBOX} {HBOX} 0.0 150.0 units box
+create_box  		1 box bond/types 1 extra/bond/per/atom 1 
+
+read_data				chain.data add append 
+mass						* 1.0
+
+group						most id != 1
+group						poly type 1
+
+neighbor 		 		4.0 bin
+neigh_modify		every 1 delay 1
+comm_modify			cutoff 1.9
+
+pair_style 			lj/cut 1.122462
+pair_coeff			* * 1.0 1.0
+pair_modify			shift yes
+
+bond_style			fene
+bond_coeff			1 30.0 1.5 1.0 1.0
+special_bonds 	fene
+
+fix 						1 most nve
+fix 						2 all langevin 1.0 1.0 1.0 {RAND1}
+fix     				3 poly wall/lj93 zhi EDGE 1.0 1.0 0.858374 units box pbc yes
+fix 						4 poly wall/lj93 zlo EDGE {EPS} 1.0 2.5 units box pbc yes
+
+thermo					100000
+thermo_style 		custom step temp press ke pe epair ebond etotal fmax fnorm
+thermo_modify		flush yes
+
+timestep				0.01
+run 						10000000 # equilibrate
+
+compute					1 poly gyration
+variable 				rg_para equal (0.5*((c_1[1])^2+(c_1[2])^2))^0.5
+variable				rg_perp equal c_1[3]
+
+fix							5 all print 1000000 "$(step) $(v_rg_perp:%.6f) $(v_rg_para:%.6f)" file rg.txt title "# step rg_perp rg_para" screen no
+
+run							1000000000

@@ -1,0 +1,43 @@
+colvarsTrajFrequency		100
+colvarsRestartFrequency		100000
+
+colvar {
+
+	name distz
+	width 0.1
+
+	lowerBoundary -31.0 
+	upperBoundary 30.0
+	expandBoundaries on
+
+	outputAppliedForce on
+	outputVelocity off
+	outputTotalForce yes
+	corrFunc on
+		
+	distanceZ {
+
+		main { atomNumbersRange 701-800 }
+		ref { dummyAtom (0.0, 0.0, 0.0) } 
+		axis (0.0, 0.0, 1.0) 
+		oneSiteTotalForce yes
+
+	}
+
+}
+
+abf {
+
+        name abf_long
+        colvars distz
+
+        fullSamples {sample}
+        maxForce {maxf}
+        applyBias yes
+        updateBias yes
+
+        integrate yes
+        integrateTol 1e-6
+
+}
+

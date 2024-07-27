@@ -1,0 +1,11 @@
+# single particle  
+ 
+1  atoms
+
+Types
+
+1	1
+
+Coords
+
+        1	6.3055	-23.8474	21.2888

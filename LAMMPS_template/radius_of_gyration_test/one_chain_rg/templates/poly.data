@@ -1,0 +1,36 @@
+# Number of chains of Species 1 =     1
+ 
+# Actual mol fraction of Species 1 = 1.000
+
+# Actual reduced density, rhostar = 0.000
+
+# LAMMPS polymer melt data file
+ 
+           2  atoms
+           1  bonds
+           0  angles
+           0  dihedrals
+           0  impropers
+ 
+           1  atom types
+           1  bond types
+           0  angle types
+           0  dihedral types
+           0  improper types
+ 
+     -10.000000      10.000000 xlo xhi
+     -10.000000      10.000000 ylo yhi
+       0.000000      20.000000 zlo zhi
+ 
+Masses
+ 
+  1  1.0
+ 
+Atoms
+ 
+         1       1       1   -7.8092   -8.9709   15.5121   0   0   0
+         2       1       1   -8.5815   -9.5441   15.3861   0   0   0
+ 
+Bonds
+ 
+        1  1        1        2

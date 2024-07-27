@@ -1,0 +1,74 @@
+# single polymer chain in bulk with GC
+# Input script parameters adapted from "lammps.sandia.gov/bench.html#chain"
+
+clear
+units		lj
+processors      * * *
+dimension	3
+boundary 	p p p 
+atom_style 	atomic
+
+region          box block -2.5 2.5 -2.5 2.5 0.0 5.0 units box side in
+create_box      1 box #bond/types 1 extra/bond/per/atom 1
+
+create_atoms 	1 random 1 {RAND1} box
+#read_data	poly.data add append 
+mass		* 1.0
+
+group		poly type 1
+
+neighbor 	4.0  bin
+neigh_modify	every 1 delay 1
+comm_modify  	cutoff 1.9
+
+pair_style 	soft 1.122462
+pair_coeff	* * 4
+
+#bond_style	fene
+#bond_coeff	1 30.0 1.5 1.0 1.0
+#special_bonds   fene
+
+variable 	prefactor equal ramp(4,100)
+
+#molecule        minsert minsert.txt
+
+fix             1 all nve
+fix             2 all langevin 1.0 1.0 10.0 {RAND1}
+fix 		3 all gcmc 100 100 0 1 {RAND2} 1.0 {u} 0.01 region box #mol minsert
+fix		4 all adapt 1 pair soft a * * v_prefactor
+#fix             5 all wall/lj93 zhi EDGE 1.0 1.0 0.858374 units box pbc yes
+#fix             6 all wall/lj93 zlo EDGE {EPS} 1.0 0.858374 units box pbc yes
+
+thermo		100
+thermo_style 	custom step temp press ke pe epair ebond etotal fmax fnorm
+thermo_modify	flush yes
+
+timestep	0.01
+run 		1000000
+
+unfix           2
+unfix 		4
+
+pair_style      lj/cut 2.5
+pair_coeff      1 1 1.0 1.0 2.5
+pair_modify	shift yes
+
+fix             7 all langevin 1.0 1.0 10.0 {RAND3}
+
+thermo		100
+thermo_style 	custom step temp press ke pe epair ebond etotal fmax fnorm
+thermo_modify	flush yes
+
+run		1000000
+
+thermo          100
+thermo_style    custom step temp press ke pe epair ebond etotal fmax fnorm
+thermo_modify   flush yes
+
+#dump                    1 poly custom 100 poly.lammpstrj.gz id type x y z ix iy iz
+#dump_modify             1 sort id pbc yes
+
+variable	catoms equal count(all)/5^3
+fix             8 all print 100 "$(step) $(v_catoms)" title "#timestep totalatoms" file totalatoms.txt screen no
+
+run		10000000

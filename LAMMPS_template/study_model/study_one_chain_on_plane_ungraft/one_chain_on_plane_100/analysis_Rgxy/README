@@ -1,0 +1,47 @@
+Usage of "matrix70" analysis script: ./matrix70 cfg.txt
+
+Explanation of and examples of parameters in input file "cfg.txt"
+
+The output of the matrix70 program--"dimensions.data" and "partition.data"--can be further analyzed using the tools "generic_analyzer" and "autocorrelation," which are available on all local machines, e.g., "Achilles." For detailed usage instructions, see the following pages on the group wiki:
+
+https://csml-wiki.northwestern.edu/index.php/Generic_Analyzer
+https://csml-wiki.northwestern.edu/index.php/Autocorrelation
+
+There are three example input/output files included: "equil.lammpstrj" is a sample LAMMPS dump file (current parameters in "cfg.txt" are for this dump file); "dimensions.data" and "partition.data" are sample output files. The version of matrix70 here produced these output files from the "equil.lammpstrj" and "cfg.txt" inputs. 
+
+Note: many of the lines in the cfg.txt file aren't used by the matrix70 version of the analysis program. Don't remove these lines, because otherwise the program won't read the cfg file correctly and will return a fatal error. 
+
+dumpname       = poly.lammpstrj.gz # can be zipped ".gz" or unzipped  
+firsttimestep  = 0 # this is the LAMMPS timestep value that your dump file starts at 
+saveevery      = 1000 # frequency of frames from .lammpstrj dump file 
+timesteps      = 10000 # actually the number of frames, starting from frame 0 at timestep 0
+maxdeltat      = 5000 # maximum number of timesteps for msd calculation  
+rho            = 0.30 # monomer number concentration of polymer in "bulk" above pore 
+chainlength    = 100 # number of monomers
+no_chains      = 100 # find this value in the first line of the input datafile "
+z_com          = 1 # ignore 
+length         = 50 # length of simulation box in the x and y dimensions 
+height         = 50 # height of "bulk" region above pore 
+depth          = 99.65 # depth of pore, measured from 
+radius 	       = 3.5 # radius of pore 
+bin_length     = 10.0 # ignore (old)
+bin_width      = 0.10 # ignore (old)
+bin_cutoff     = 5.0 # ignore (old)
+disk_radius    = 4.0 # ignore (old)
+disk_height    = 2.0 # ignore (old)
+ad_condition_z = 1 # ignore (old)
+compute_msd    = 0 # 0 if no, 1 if yes 
+outputfile     = dimensions.data # output file containing Rg, Re and average bond distance for each timestep
+adsorb         = adsorb.dat # ignore (old)
+msdout         = msd.data # msd output file 
+aveforce       = aveforce.dat # ignore 
+centerofmass   = centerofmass.dat # ignore
+ejectiontime   = ejectiontimes.dat # ignore
+pore           = pore_occupancy.dat # ignore 
+gofz           = zdensityvstime.dat # ignore 
+densities      = bindensities.dat # ignore 
+energies       = binenergies.dat # ignore 
+opening        = atoms_near_opening_long.dat # ignore 
+bottom_disk_height = 10.0 # ignore 
+bottom		     = phi{PHIA}.dat # ignore
+partition      = partition.data # name of the output file that contains the concentractions of polymer monomers in the pore and bulk and the partition coefficient (phi_pore/phi_bulk)
