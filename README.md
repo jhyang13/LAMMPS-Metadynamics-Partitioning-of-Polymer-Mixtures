@@ -27,3 +27,7 @@ Calculate the metadynamics histogram
 ### molecule_file_LAMMPS
 
 create a molecule file in LAMMPS format
+
+### LAMMPS_template
+
+LAMMPS input files related to this project
