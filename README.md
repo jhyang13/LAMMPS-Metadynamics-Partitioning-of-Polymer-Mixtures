@@ -1,6 +1,6 @@
-## Preferential Adsorption of Polymer Mixtures into Confining Geometries
+# Preferential Adsorption of Polymer Mixtures into Confining Geometries using LAMMPS
 
-### Python code for computational soft matter research - Partitioning of polymer mixtures using LAMMPS
+## Python Code
 
 `adsorption_energy_in_pore`
 
@@ -28,6 +28,7 @@ Calculate the metadynamics histogram
 
 create a molecule file in LAMMPS format
 
+## LAMMPS Files
 `LAMMPS_template`
 
 LAMMPS input files related to this project
