@@ -1,4 +1,9 @@
-# Preferential Adsorption of Polymer Mixtures into Confining Geometries using LAMMPS
+# Partitioning of Polymer Mixtures into Confining Geometries using LAMMPS
+
+## LAMMPS Files
+`LAMMPS_template`
+
+LAMMPS input files related to this project
 
 ## Python Code
 
@@ -27,8 +32,3 @@ Calculate the metadynamics histogram
 `molecule_file_LAMMPS`
 
 create a molecule file in LAMMPS format
-
-## LAMMPS Files
-`LAMMPS_template`
-
-LAMMPS input files related to this project
