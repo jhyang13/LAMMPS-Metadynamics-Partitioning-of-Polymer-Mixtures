@@ -1,6 +1,6 @@
 # Preferential Adsorption of Polymer Mixtures into Confining Geometries
 
-Python code for computational soft matter research - Partitioning of polymer mixtures using LAMMPS
+## Python code for computational soft matter research - Partitioning of polymer mixtures using LAMMPS
 
 `adsorption_energy_in_pore`
 
