@@ -1,4 +1,4 @@
-# Partitioning of Polymer Mixtures into Confining Geometries using LAMMPS
+# Partitioning of Polymer Mixtures into Pores using LAMMPS
 
 ## LAMMPS Files
 `LAMMPS_template`
