@@ -5,7 +5,7 @@
 
 LAMMPS input files related to this project
 
-## Python Code
+## Python Codes for Data Analysis
 
 `adsorption_energy_in_pore`
 
