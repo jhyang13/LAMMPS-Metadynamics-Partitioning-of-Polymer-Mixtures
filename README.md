@@ -1,9 +1,7 @@
-# Partitioning of Polymer Mixtures into Pores using LAMMPS
+# Role of Enthalpy in Preferential Adsorption of Polymer Mixtures into Confining Geometries
 
 ## LAMMPS Files
-`LAMMPS_template`
-
-LAMMPS input files related to this project
+`LAMMPS_template`: LAMMPS input files related to this project
 
 ## Python Codes for Data Analysis
 
