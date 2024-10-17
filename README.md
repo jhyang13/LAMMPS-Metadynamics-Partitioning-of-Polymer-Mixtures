@@ -2,6 +2,8 @@
 
 ![image](https://github.com/user-attachments/assets/4c319ab2-261b-45ba-8d6d-1fa7536e3979)
 
+![image](https://github.com/user-attachments/assets/2ddb30f7-507f-435d-baef-9889f9889b35)
+
 ### LAMMPS Files
 `LAMMPS_template`: LAMMPS input files related to this project
 
