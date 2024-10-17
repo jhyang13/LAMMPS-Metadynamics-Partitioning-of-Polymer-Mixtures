@@ -1,5 +1,7 @@
 # Role of Enthalpy in Preferential Adsorption of Polymer Mixtures into Confining Geometries
 
+![image](https://github.com/user-attachments/assets/1ca033f0-0e45-4789-88a3-3232ac865584)
+
 ## LAMMPS Files
 `LAMMPS_template`: LAMMPS input files related to this project
 
